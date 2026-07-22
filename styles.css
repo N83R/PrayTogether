@@ -78,12 +78,22 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   letter-spacing: .03em;
   padding: 0;
 }
+
+.brand-logo-only {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
 .brand-logo {
-  width: 42px;
-  height: 42px;
+  width: 82px;
+  height: 62px;
   object-fit: contain;
   display: block;
-  flex-shrink: 0;
 }
 .header-actions { display: flex; align-items: center; gap: 8px; }
 .theme-toggle, button.small {
