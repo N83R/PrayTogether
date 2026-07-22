@@ -174,8 +174,6 @@ function render() {
   app.innerHTML = '';
   const templateId = route === 'home' ? 'home-template' : route === 'pray' ? 'pray-template' : route === 'submit-prayer' || route === 'submit-praise' ? 'submit-template' : route === 'praise' ? 'praise-template' : 'admin-template';
   app.append(document.getElementById(templateId).content.cloneNode(true));
-  
-  bindBrandAdmin();
 
   if (route === 'home') renderHome();
   if (route === 'pray') renderPray();
@@ -490,6 +488,7 @@ document.addEventListener('click', e => {
   if (nav) navigate(nav.dataset.nav);
 });
 
+bindBrandAdmin();
 bindNav();
 (async () => {
   try { await refreshRemoteState(); }
