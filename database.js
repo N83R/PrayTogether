@@ -107,7 +107,7 @@
     signIn,
     signOut,
     getSession,
-    updatePost
+    updatePost,
     deletePost
   };
 })();
