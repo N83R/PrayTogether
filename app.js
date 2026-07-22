@@ -367,12 +367,41 @@ function drawAdminList() {
 }
 
 async function adminAction(action, id) {
-  const post = state.posts.find(p => p.id === id); if (!post) return;
+  const post = state.posts.find(p => p.id === id);
+  if (!post) return;
+
+  if (action === 'delete') {
+    const confirmed = window.confirm(
+      'Are you sure you want to permanently delete this post? This cannot be undone.'
+    );
+
+    if (!confirmed) return;
+
+    try {
+      if (db?.configured) {
+        await db.deletePost(id);
+      }
+
+      state.posts = state.posts.filter(p => p.id !== id);
+      saveState();
+      drawAdminList();
+    } catch (error) {
+      showError(error, 'The post could not be deleted.');
+    }
+
+    return;
+  }
+
   const changes = { updated_at: nowIso() };
+
   if (action === 'approve') changes.status = 'active';
   if (action === 'hide') changes.status = 'hidden';
-  if (action === 'delete') changes.status = 'deleted';
-  if (action === 'extend') changes.expires_at = daysFromNow(DEFAULT_EXPIRATION_DAYS[post.type]);
+  if (action === 'extend') {
+    changes.expires_at = daysFromNow(
+      DEFAULT_EXPIRATION_DAYS[post.type]
+    );
+  }
+
   try {
     if (db?.configured) {
       const updated = await db.updatePost(id, changes);
@@ -381,8 +410,11 @@ async function adminAction(action, id) {
       Object.assign(post, changes);
       saveState();
     }
+
     drawAdminList();
-  } catch (error) { showError(error); }
+  } catch (error) {
+    showError(error);
+  }
 }
 
 async function reportPost(id) {
