@@ -175,6 +175,8 @@ function render() {
   const templateId = route === 'home' ? 'home-template' : route === 'pray' ? 'pray-template' : route === 'submit-prayer' || route === 'submit-praise' ? 'submit-template' : route === 'praise' ? 'praise-template' : 'admin-template';
   app.append(document.getElementById(templateId).content.cloneNode(true));
 
+  bindBrandAdmin();
+
   if (route === 'home') renderHome();
   if (route === 'pray') renderPray();
   if (route === 'submit-prayer' || route === 'submit-praise') renderSubmit(route === 'submit-prayer' ? 'prayer' : 'praise');
@@ -259,6 +261,7 @@ function renderPray() {
 }
 
 function renderSubmit(type) {
+  document.querySelector('[data-page-header-title]').textContent = type === 'prayer' ? 'Submit Prayer' : 'Submit Praise';
   document.querySelector('[data-form-eyebrow]').textContent = type === 'prayer' ? 'Ask for prayer' : 'Share encouragement';
   document.querySelector('[data-form-title]').textContent = type === 'prayer' ? 'Submit a Prayer' : 'Submit a Praise';
   document.querySelector('[data-textarea-label]').textContent = type === 'prayer' ? 'Prayer request' : 'Praise report';
@@ -295,6 +298,7 @@ function renderSubmit(type) {
     bindNav();
   };
 }
+
 
 function renderPraise() {
   const praises = activePosts('praise');
@@ -463,22 +467,21 @@ function bindNav() { document.querySelectorAll('[data-nav]').forEach(btn => btn.
 let lastBrandTap = 0;
 
 function bindBrandAdmin() {
-    const brand = document.getElementById("brandButton");
+  const brand = document.getElementById('brandButton');
 
-    if (!brand) return;
+  if (!brand) return;
 
-    brand.onclick = () => {
-        const now = Date.now();
+  brand.onclick = () => {
+    const now = Date.now();
 
-        if (now - lastBrandTap < 350) {
-            lastBrandTap = 0;
-            navigate("admin");
-            return;
-        }
+    if (now - lastBrandTap < 350) {
+      lastBrandTap = 0;
+      navigate('admin');
+      return;
+    }
 
-        lastBrandTap = now;
-        navigate("home");
-    };
+    lastBrandTap = now;
+  };
 }
 
 document.addEventListener('click', e => {
@@ -488,7 +491,7 @@ document.addEventListener('click', e => {
   if (nav) navigate(nav.dataset.nav);
 });
 
-bindBrandAdmin();
+
 bindNav();
 (async () => {
   try { await refreshRemoteState(); }
