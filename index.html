@@ -10,23 +10,15 @@
 <body>
   <div class="app-shell">
    <header class="topbar">
-  <button class="brand brand-logo-only" id="brandButton" aria-label="Go home">
-    <img
-      src="images/pray-together-logo.png"
-      alt=""
-      class="brand-logo"
-    />
-  </button>
+  <div class="topbar-spacer" aria-hidden="true"></div>
 
-  <div class="header-actions">
-    <button
-      class="theme-toggle"
-      data-theme-toggle
-      aria-label="Toggle night mode"
-    >
-      ☾
-    </button>
-  </div>
+  <button
+    class="theme-toggle"
+    data-theme-toggle
+    aria-label="Toggle night mode"
+  >
+    ☾
+  </button>
 </header>
 
     <main id="app" aria-live="polite"></main>
@@ -41,8 +33,17 @@
 
   <template id="home-template">
     <section class="hero card">
-      <p class="eyebrow">A quiet place to pray together</p>
-      <h1>Prayer Wall</h1>
+      <button
+        class="hero-logo-button"
+        id="brandButton"
+        aria-label="Pray Together"
+      >
+        <img
+          src="images/pray-together-logo.png"
+          alt="Pray Together — A quiet place to pray together"
+          class="hero-logo"
+        />
+      </button>
       <p class="active-count"><strong data-active-prayers>0</strong> Active Prayers</p>
 
       <div class="stat-rotator" aria-label="Prayer activity">
@@ -87,6 +88,14 @@
   </template>
 
   <template id="pray-template">
+    <div class="page-header">
+      <img
+        src="images/pray-together-logo.png"
+        alt="Pray Together"
+        class="page-header-logo"
+      />
+      <p class="page-header-title">Prayer Wall</p>
+    </div>
     <section class="card prayer-focus">
       <p class="eyebrow">Pray for someone</p>
       <h1>Someone needs prayer.</h1>
@@ -99,6 +108,16 @@
   </template>
 
   <template id="submit-template">
+    <div class="page-header">
+      <img
+        src="images/pray-together-logo.png"
+        alt="Pray Together"
+        class="page-header-logo"
+      />
+      <p class="page-header-title" data-page-header-title>
+        Submit Prayer
+      </p>
+    </div>
     <section class="card form-card">
       <p class="eyebrow" data-form-eyebrow>Submit</p>
       <h1 data-form-title>Submit a Prayer</h1>
@@ -118,6 +137,15 @@
   </template>
 
   <template id="praise-template">
+    <div class="page-header">
+      <img
+        src="images/pray-together-logo.png"
+        alt="Pray Together"
+        class="page-header-logo"
+      />
+      <p class="page-header-title">Praise Wall</p>
+    </div>
+  
     <section class="card">
       <p class="eyebrow">Encouragement</p>
       <h1>Praise Wall</h1>
@@ -131,6 +159,14 @@
   </template>
 
   <template id="admin-template">
+      <div class="page-header">
+        <img
+          src="images/pray-together-logo.png"
+          alt="Pray Together"
+          class="page-header-logo"
+        />
+        <p class="page-header-title">Administration</p>
+      </div>
     <section class="card admin-login" data-admin-login>
       <p class="eyebrow">Private</p>
       <h1>Admin</h1>
