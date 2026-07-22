@@ -480,7 +480,7 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) { .fading, .active-count::before { animation: none !important; transition: none !important; } }
 @media (max-width: 430px) {
   .app-shell { padding-left: 16px; padding-right: 16px; }
-  .card { padding: 20px; }
+  .card:not(.hero) { padding: 20px; }
   .cta-grid { grid-template-columns: 1fr; }
   .admin-controls { grid-template-columns: 1fr; }
 }
