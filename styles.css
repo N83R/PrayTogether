@@ -154,7 +154,7 @@ h2 { font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 500;
   font-size: 11px;
   margin-bottom: 6px;
 }
-.eyebrow::before { content: "🔥"; color: var(--gold); font-family: initial; letter-spacing: 0; }
+.eyebrow::before { color: var(--gold); font-family: initial; letter-spacing: 0; }
 .lede, .muted, .soft-label { color: var(--text-muted); }
 .soft-label { font-size: 12px; }
 
