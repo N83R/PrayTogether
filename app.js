@@ -252,7 +252,8 @@ function renderSubmit(type) {
   document.querySelector('[data-textarea-label]').textContent = type === 'prayer' ? 'Prayer request' : 'Praise report';
   document.querySelector('[data-submit-form]').onsubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    const formElement = e.currentTarget;
+    const form = new FormData(formElement);
     const body = String(form.get('body') || '').trim();
     const displayName = String(form.get('displayName') || '').trim() || null;
     const mod = await moderationCheck(body);
@@ -278,7 +279,7 @@ function renderSubmit(type) {
     }
     const finalStatus = post.status;
     const cls = finalStatus === 'active' ? 'good' : '';
-    e.currentTarget.closest('.card').innerHTML = `<div class="notice ${cls}">${finalStatus === 'active' ? 'Submitted. It is now on the board.' : 'Submitted for administrator review before it appears publicly.'}</div><button class="primary full" data-nav="home">Return Home</button>`;
+    formElement.closest('.card').innerHTML = `<div class="notice ${cls}">${finalStatus === 'active' ? 'Submitted. It is now on the board.' : 'Submitted for administrator review before it appears publicly.'}</div><button class="primary full" data-nav="home">Return Home</button>`;
     bindNav();
   };
 }
