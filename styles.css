@@ -498,3 +498,16 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
 .danger:active {
   background: #8b1515;
 }
+
+.site-footer {
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-top: 1px solid rgba(128,128,128,.15);
+    background: var(--surface);
+}
+
+.site-footer p {
+    margin: 0;
+}
