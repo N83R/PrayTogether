@@ -48,6 +48,18 @@ applyTheme(getStoredTheme());
 function nowIso() { return new Date().toISOString(); }
 function uid(prefix = 'p') { return `${prefix}_${Math.random().toString(36).slice(2, 9)}${Date.now().toString(36).slice(-4)}`; }
 function daysFromNow(days) { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString(); }
+
+function extendExpiration(currentExpiration, additionalDays) {
+  const now = new Date();
+  const current = new Date(currentExpiration);
+
+  // If it hasn't expired yet, extend from the current expiration.
+  // Otherwise, extend from today.
+  const start = current > now ? current : now;
+
+  start.setDate(start.getDate() + additionalDays);
+  return start.toISOString();
+}
 function getTagId() { return new URLSearchParams(location.search).get('t') || null; }
 function getReporterToken() {
   try {
@@ -394,13 +406,25 @@ async function adminAction(action, id) {
 
   const changes = { updated_at: nowIso() };
 
-  if (action === 'approve') changes.status = 'active';
-  if (action === 'hide') changes.status = 'hidden';
-  if (action === 'extend') {
-    changes.expires_at = daysFromNow(
-      DEFAULT_EXPIRATION_DAYS[post.type]
-    );
+if (action === 'approve') changes.status = 'active';
+if (action === 'hide') changes.status = 'hidden';
+
+if (action === 'extend') {
+
+  const confirmed = window.confirm(
+    `Extend this ${post.type} for another ${DEFAULT_EXPIRATION_DAYS[post.type]} days?`
+  );
+
+  if (!confirmed) return;
+
+  changes.expires_at = daysFromNow(
+    DEFAULT_EXPIRATION_DAYS[post.type]
+  );
+
+  if (post.status === 'expired') {
+    changes.status = 'active';
   }
+}
 
   try {
     if (db?.configured) {
