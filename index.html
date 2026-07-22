@@ -1,57 +1,147 @@
 <!doctype html>
 <html lang="en" data-theme="light">
-  
+
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
   <meta name="theme-color" content="#22382f" />
+
   <title>Pray Together | Mt. Moriah Baptist Church</title>
-  <link rel="stylesheet" href="styles.css?v=2" />
-  <link rel="icon" type="image/png" href="/images/pray-together-logo.png">
-  <link rel="apple-touch-icon" href="/images/pray-together-logo.png">
-  <link rel="shortcut icon" href="/images/pray-together-logo.png">
-  <meta property="og:title" content="Pray Together">
-  <meta property="og:description" content="A quiet place to pray together.">
-  <meta property="og:image" content="https://praytogethermmbc.com/images/pray-together-logo.png">
-  <meta property="og:url" content="https://praytogethermmbc.com">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Pray Together">
-  <meta name="twitter:description" content="A quiet place to pray together.">
-  <meta name="twitter:image" content="https://praytogethermmbc.com/images/pray-together-logo.png">
+
+  <link rel="stylesheet" href="styles.css?v=3" />
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="/images/pray-together-logo.png"
+  />
+  <link
+    rel="apple-touch-icon"
+    href="/images/pray-together-logo.png"
+  />
+  <link
+    rel="shortcut icon"
+    href="/images/pray-together-logo.png"
+  />
+
+  <meta
+    name="description"
+    content="A quiet place to pray together."
+  />
+
+  <meta property="og:title" content="Pray Together" />
+  <meta
+    property="og:description"
+    content="A quiet place to pray together."
+  />
+  <meta
+    property="og:image"
+    content="https://praytogethermmbc.com/images/pray-together-logo.png"
+  />
+  <meta
+    property="og:url"
+    content="https://praytogethermmbc.com"
+  />
+  <meta property="og:type" content="website" />
+  <meta
+    property="og:site_name"
+    content="Pray Together"
+  />
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  />
+  <meta
+    name="twitter:title"
+    content="Pray Together"
+  />
+  <meta
+    name="twitter:description"
+    content="A quiet place to pray together."
+  />
+  <meta
+    name="twitter:image"
+    content="https://praytogethermmbc.com/images/pray-together-logo.png"
+  />
 </head>
+
 <body>
-  
   <div class="app-shell">
-   <header class="topbar">
-  <div class="topbar-spacer" aria-hidden="true"></div>
 
-  <button
-    class="theme-toggle"
-    data-theme-toggle
-    aria-label="Toggle night mode"
-  >
-    ☾
-  </button>
-</header>
+    <header class="topbar">
+      <div
+        class="topbar-spacer"
+        aria-hidden="true"
+      ></div>
 
-    <main id="app" aria-live="polite"></main>
+      <button
+        type="button"
+        class="theme-toggle"
+        data-theme-toggle
+        aria-label="Toggle night mode"
+      >
+        ☾
+      </button>
+    </header>
+
+    <main
+      id="app"
+      aria-live="polite"
+    ></main>
 
     <footer class="site-footer">
-      <p>&copy; <span id="copyright-year"></span> Pray Together. All rights reserved.</p>
+      <p>
+        &copy;
+        <span id="copyright-year"></span>
+        Pray Together. All rights reserved.
+      </p>
     </footer>
-    
-    <nav class="bottom-nav" aria-label="Primary navigation">
-      <button data-nav="home">Wall</button>
-      <button data-nav="pray">Pray</button>
-      <button data-nav="submit-prayer">Request</button>
-      <button data-nav="praise">Praise</button>
+
+    <nav
+      class="bottom-nav"
+      aria-label="Primary navigation"
+    >
+      <button
+        type="button"
+        data-nav="home"
+      >
+        Wall
+      </button>
+
+      <button
+        type="button"
+        data-nav="pray"
+      >
+        Pray
+      </button>
+
+      <button
+        type="button"
+        data-nav="submit-prayer"
+      >
+        Request
+      </button>
+
+      <button
+        type="button"
+        data-nav="praise"
+      >
+        Praise
+      </button>
     </nav>
+
   </div>
 
+  <!-- Home page -->
   <template id="home-template">
     <section class="hero card">
+
       <button
+        type="button"
         class="hero-logo-button"
         id="brandButton"
         aria-label="Pray Together"
@@ -62,13 +152,32 @@
           class="hero-logo"
         />
       </button>
-      <p class="active-count"><strong data-active-prayers>0</strong> Active Prayers</p>
 
-      <div class="stat-rotator" aria-label="Prayer activity">
+      <p class="active-count">
+        <strong data-active-prayers>0</strong>
+        Active Prayers
+      </p>
+
+      <div
+        class="stat-rotator"
+        aria-label="Prayer activity"
+      >
         <div class="stat-icon">🙏</div>
+
         <div>
-          <div class="stat-number" data-stat-number>0</div>
-          <div class="stat-label" data-stat-label>Prayers Offered Today</div>
+          <div
+            class="stat-number"
+            data-stat-number
+          >
+            0
+          </div>
+
+          <div
+            class="stat-label"
+            data-stat-label
+          >
+            Prayers Offered Today
+          </div>
         </div>
       </div>
     </section>
@@ -78,36 +187,133 @@
         <h2>On the Board</h2>
         <span class="soft-label">live rotation</span>
       </div>
-      <article class="fade-card" data-board-card>
-        <span class="pill" data-board-type>Prayer</span>
+
+      <article
+        class="fade-card"
+        data-board-card
+      >
+        <span
+          class="pill"
+          data-board-type
+        >
+          Prayer
+        </span>
+
         <p data-board-body>Loading...</p>
       </article>
     </section>
 
     <section class="cta-grid">
-      <button class="primary" data-nav="pray">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
+
+      <button
+        type="button"
+        class="primary"
+        data-nav="pray"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+        </svg>
+
         Pray for Someone
       </button>
-      
-      <button class="secondary" data-nav="submit-prayer">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notebook-pen-icon lucide-notebook-pen"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
+
+      <button
+        type="button"
+        class="secondary"
+        data-nav="submit-prayer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4" />
+          <path d="M2 6h4" />
+          <path d="M2 10h4" />
+          <path d="M2 14h4" />
+          <path d="M2 18h4" />
+          <path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+        </svg>
+
         Submit Prayer
       </button>
-      <button class="secondary" data-nav="submit-praise">
-         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand-heart-icon lucide-hand-heart"><path d="M11 14h2a2 2 0 0 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"/><path d="m14.45 13.39 5.05-4.694C20.196 8 21 6.85 21 5.75a2.75 2.75 0 0 0-4.797-1.837.276.276 0 0 1-.406 0A2.75 2.75 0 0 0 11 5.75c0 1.2.802 2.248 1.5 2.946L16 11.95"/><path d="m2 15 6 6"/><path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a1 1 0 0 0-2.75-2.91"/></svg>
+
+      <button
+        type="button"
+        class="secondary"
+        data-nav="submit-praise"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M11 14h2a2 2 0 0 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16" />
+          <path d="m14.45 13.39 5.05-4.694C20.196 8 21 6.85 21 5.75a2.75 2.75 0 0 0-4.797-1.837.276.276 0 0 1-.406 0A2.75 2.75 0 0 0 11 5.75c0 1.2.802 2.248 1.5 2.946L16 11.95" />
+          <path d="m2 15 6 6" />
+          <path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a1 1 0 0 0-2.75-2.91" />
+        </svg>
+
         Submit Praise
       </button>
-      <button class="secondary" data-nav="praise">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkle-icon lucide-sparkle"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/></svg>
+
+      <button
+        type="button"
+        class="secondary"
+        data-nav="praise"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
+        </svg>
+
         Praise Wall
       </button>
+
     </section>
   </template>
 
+  <!-- Prayer wall -->
   <template id="pray-template">
-   <div class="page-header">
+    <div class="page-header">
+
       <button
+        type="button"
         class="hero-logo-button"
         data-nav="home"
         aria-label="Return to the Prayer Wall"
@@ -118,23 +324,50 @@
           class="page-header-logo"
         />
       </button>
-    
-      <p class="page-header-title">Prayer Wall</p>
+
+      <p class="page-header-title">
+        Prayer Wall
+      </p>
     </div>
+
     <section class="card prayer-focus">
-      <p class="eyebrow">Pray for someone</p>
+      <p class="eyebrow">
+        Pray for someone
+      </p>
+
       <h1>Someone needs prayer.</h1>
-      <article class="request-card" data-random-prayer></article>
+
+      <article
+        class="request-card"
+        data-random-prayer
+      ></article>
+
       <div class="button-row">
-        <button class="primary" data-action="prayed">🙏 I Prayed</button>
-        <button class="ghost" data-action="skip">Skip</button>
+        <button
+          type="button"
+          class="primary"
+          data-action="prayed"
+        >
+          🙏 I Prayed
+        </button>
+
+        <button
+          type="button"
+          class="ghost"
+          data-action="skip"
+        >
+          Skip
+        </button>
       </div>
     </section>
   </template>
 
+  <!-- Prayer and praise submission form -->
   <template id="submit-template">
     <div class="page-header">
+
       <button
+        type="button"
         class="hero-logo-button"
         data-nav="home"
         aria-label="Return to the Prayer Wall"
@@ -145,29 +378,75 @@
           class="page-header-logo"
         />
       </button>
+
+      <p
+        class="page-header-title"
+        data-page-header-title
+      >
         Submit Prayer
       </p>
     </div>
+
     <section class="card form-card">
-      <p class="eyebrow" data-form-eyebrow>Submit</p>
-      <h1 data-form-title>Submit a Prayer</h1>
+      <p
+        class="eyebrow"
+        data-form-eyebrow
+      >
+        Submit
+      </p>
+
+      <h1 data-form-title>
+        Submit a Prayer
+      </h1>
+
       <form data-submit-form>
         <label>
-          Display name <span class="muted">optional</span>
-          <input name="displayName" maxlength="40" placeholder="Anonymous" autocomplete="off" />
+          Display name
+          <span class="muted">optional</span>
+
+          <input
+            name="displayName"
+            maxlength="40"
+            placeholder="Anonymous"
+            autocomplete="off"
+          />
         </label>
+
         <label>
-          <span data-textarea-label>Prayer request</span>
-          <textarea name="body" maxlength="500" rows="7" required placeholder="Write your request here. Please avoid names/details that should stay private."></textarea>
+          <span data-textarea-label>
+            Prayer request
+          </span>
+
+          <textarea
+            name="body"
+            maxlength="500"
+            rows="7"
+            required
+            placeholder="Write your request here. Please avoid names/details that should stay private."
+          ></textarea>
         </label>
-        <p class="form-note">Clean submissions post automatically. Content matched by the moderation reference list is held for administrator review.</p>
-        <button class="primary full" type="submit">Submit</button>
+
+        <p class="form-note">
+          Clean submissions post automatically. Content matched by the
+          moderation reference list is held for administrator review.
+        </p>
+
+        <button
+          class="primary full"
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
     </section>
   </template>
 
+  <!-- Praise wall -->
   <template id="praise-template">
+    <div class="page-header">
+
       <button
+        type="button"
         class="hero-logo-button"
         data-nav="home"
         aria-label="Return to the Prayer Wall"
@@ -178,23 +457,52 @@
           class="page-header-logo"
         />
       </button>
-      <p class="page-header-title">Praise Wall</p>
+
+      <p class="page-header-title">
+        Praise Wall
+      </p>
     </div>
-  
+
     <section class="card">
-      <p class="eyebrow">Encouragement</p>
+      <p class="eyebrow">
+        Encouragement
+      </p>
+
       <h1>Praise Wall</h1>
-      <p class="lede">A quiet board of praise reports and reminders that God is still at work.</p>
-      <article class="fade-card praise-big" data-praise-card>
-        <span class="pill praise">Praise</span>
-        <p data-praise-body>Loading...</p>
+
+      <p class="lede">
+        A quiet board of praise reports and reminders that God is still at work.
+      </p>
+
+      <article
+        class="fade-card praise-big"
+        data-praise-card
+      >
+        <span class="pill praise">
+          Praise
+        </span>
+
+        <p data-praise-body>
+          Loading...
+        </p>
       </article>
-      <button class="secondary full" data-nav="submit-praise">🙌 Submit Praise</button>
+
+      <button
+        type="button"
+        class="secondary full"
+        data-nav="submit-praise"
+      >
+        🙌 Submit Praise
+      </button>
     </section>
   </template>
 
+  <!-- Administration -->
   <template id="admin-template">
+    <div class="page-header">
+
       <button
+        type="button"
         class="hero-logo-button"
         data-nav="home"
         aria-label="Return to the Prayer Wall"
@@ -205,38 +513,117 @@
           class="page-header-logo"
         />
       </button>
-        <p class="page-header-title">Administration</p>
-      </div>
-    <section class="card admin-login" data-admin-login>
-      <p class="eyebrow">Private</p>
+
+      <p class="page-header-title">
+        Administration
+      </p>
+    </div>
+
+    <section
+      class="card admin-login"
+      data-admin-login
+    >
+      <p class="eyebrow">
+        Private
+      </p>
+
       <h1>Admin</h1>
-      <p class="lede">Sign in with the administrator account configured in Supabase.</p>
+
+      <p class="lede">
+        Sign in with the administrator account configured in Supabase.
+      </p>
+
       <form data-login-form>
-        <label>Email<input name="email" type="email" autocomplete="username" required /></label>
-        <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
-        <button class="primary full" type="submit">Enter Admin</button>
+        <label>
+          Email
+
+          <input
+            name="email"
+            type="email"
+            autocomplete="username"
+            required
+          />
+        </label>
+
+        <label>
+          Password
+
+          <input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+        </label>
+
+        <button
+          class="primary full"
+          type="submit"
+        >
+          Enter Admin
+        </button>
       </form>
     </section>
-    <section class="admin-panel hidden" data-admin-panel>
+
+    <section
+      class="admin-panel hidden"
+      data-admin-panel
+    >
       <div class="card">
         <div class="section-title-row">
           <h1>Admin Dashboard</h1>
-          <button class="ghost small" data-action="logout">Logout</button>
+
+          <button
+            type="button"
+            class="ghost small"
+            data-action="logout"
+          >
+            Logout
+          </button>
         </div>
+
         <div class="admin-controls">
           <select data-admin-filter>
-            <option value="all">All posts</option>
-            <option value="pending">Pending</option>
-            <option value="active">Active</option>
-            <option value="reported">Reported</option>
-            <option value="hidden">Hidden</option>
-            <option value="expired">Expired</option>
-            <option value="deleted">Deleted</option>
-            <option value="rejected">Rejected</option>
+            <option value="all">
+              All posts
+            </option>
+
+            <option value="pending">
+              Pending
+            </option>
+
+            <option value="active">
+              Active
+            </option>
+
+            <option value="reported">
+              Reported
+            </option>
+
+            <option value="hidden">
+              Hidden
+            </option>
+
+            <option value="expired">
+              Expired
+            </option>
+
+            <option value="deleted">
+              Deleted
+            </option>
+
+            <option value="rejected">
+              Rejected
+            </option>
           </select>
-          <input data-admin-search placeholder="Search posts" />
+
+          <input
+            data-admin-search
+            placeholder="Search posts"
+          />
         </div>
       </div>
+
       <div data-admin-list></div>
     </section>
   </template>
@@ -245,11 +632,12 @@
   <script src="config.js"></script>
   <script src="database.js"></script>
   <script src="moderation.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
+
   <script>
-  document.getElementById("copyright-year").textContent =
-    new Date().getFullYear();
-</script>
-  
+    document.getElementById("copyright-year").textContent =
+      new Date().getFullYear();
+  </script>
 </body>
+
 </html>
