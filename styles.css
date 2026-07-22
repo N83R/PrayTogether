@@ -317,19 +317,31 @@ html[data-theme="dark"] .request-card { background: var(--bg-panel); border-widt
 .pill.praise::before { content: "✧"; }
 
 .cta-grid { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; margin-top: 26px; }
-button.primary, button.secondary, button.ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border-radius: 14px;
-  padding: 15px 18px;
-  font-size: 15.5px;
-  font-weight: 500;
-  min-height: 54px;
-  border: 1px solid transparent;
-  transition: transform 140ms ease, opacity 140ms ease, background 140ms ease, border-color 140ms ease, filter 140ms ease;
+button.primary,
+button.secondary,
+button.ghost {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    align-items: center;
+    column-gap: 10px;
+    text-align: left;
+
+    border-radius: 14px;
+    padding: 15px 20px;
+    font-size: 15.5px;
+    font-weight: 500;
+    min-height: 54px;
+    border: 1px solid transparent;
 }
+
+button.primary svg,
+button.secondary svg,
+button.ghost svg {
+    width: 22px;
+    height: 22px;
+    justify-self: center;
+}
+
 button:active { transform: scale(.98); }
 button.primary {
   background: #b96520;
