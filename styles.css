@@ -369,7 +369,7 @@ html[data-theme="dark"] .request-card { background: var(--bg-panel); border-widt
 .pill.praise { background: transparent; color: var(--rose); }
 .pill.praise::before { content: "✧"; }
 
-.cta-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; margin-top: 26px; }
+.cta-grid { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; margin-top: 20px; }
 button.primary,
 button.secondary,
 button.ghost {
