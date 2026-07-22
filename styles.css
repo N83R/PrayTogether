@@ -69,23 +69,21 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   background: transparent;
   border: 0;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: .03em;
+  padding: 0;
 }
-.brand-mark {
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: var(--bg-panel);
-  border: 1px solid var(--divider);
-  box-shadow: var(--shadow);
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 .header-actions { display: flex; align-items: center; gap: 8px; }
 .theme-toggle, button.small {
