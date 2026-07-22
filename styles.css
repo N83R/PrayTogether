@@ -412,3 +412,17 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
   .cta-grid { grid-template-columns: 1fr; }
   .admin-controls { grid-template-columns: 1fr; }
 }
+
+.danger {
+  background: #c62828;
+  color: white;
+  border: 1px solid #9e1f1f;
+}
+
+.danger:hover {
+  background: #b71c1c;
+}
+
+.danger:active {
+  background: #8b1515;
+}
