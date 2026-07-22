@@ -57,35 +57,29 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
-  padding: 8px 20px calc(82px + env(safe-area-inset-bottom));
+  padding: 24px 20px calc(88px + env(safe-area-inset-bottom));
 }
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  min-height: 38px;
+  justify-content: space-between;
+  min-height: 48px;
   margin-bottom: 0;
 }
 
 .topbar-spacer {
-  display: none;
+  width: 38px;
+  height: 38px;
 }
 
 .hero-logo-button {
   display: block;
   width: 100%;
-  margin: -4px auto 2px;
+  margin: 0 auto 16px;
   padding: 0;
   background: transparent;
   border: 0;
   box-shadow: none;
-}
-
-.hero-logo {
-  display: block;
-  width: min(285px, 82vw);
-  height: auto;
-  margin: 0 auto;
 }
 
 .hero-logo {
@@ -177,11 +171,16 @@ html[data-theme="dark"] .card { border-width: 1px; }
   border: 0;
   box-shadow: none;
   text-align: center;
-  padding: 0;
-  margin: 0;
+  padding: 16px 0 0;
+  margin-bottom: 0;
 }
 .hero::after {
-  display: none;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 22px 0 0;
+  background: linear-gradient(90deg, transparent, var(--divider), transparent);
 }
 
 h1, h2, p { margin-top: 0; }
@@ -220,7 +219,7 @@ h2 { font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 500;
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
   font-size: 12px;
   letter-spacing: .05em;
-  margin: -2px 0 0;
+  margin: 10px 0 0;
 }
 .active-count::before {
   content: "";
@@ -236,7 +235,7 @@ h2 { font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 500;
   z-index: 1;
   color: var(--text);
   font-family: 'Fraunces', Georgia, serif;
-  font-size: 42px;
+  font-size: 48px;
   line-height: 1;
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -244,14 +243,14 @@ h2 { font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 500;
 @keyframes emberPulse { 0%,100% { opacity:.5; transform:scale(.96); } 50% { opacity:1; transform:scale(1.05); } }
 
 .stat-rotator {
-  margin-top: 14px;
+  margin-top: 22px;
   display: grid;
   grid-template-columns: 42px minmax(0, max-content) 42px;
   align-items: center;
   justify-content: center;
   column-gap: 14px;
-  padding: 14px 18px;
-  min-height: 86px;
+  padding: 20px 22px;
+  min-height: 104px;
   border-radius: 20px;
   border: 1.5px solid rgba(196, 120, 58, 0.34);
   background: rgba(255,255,255,.46);
@@ -303,8 +302,8 @@ html[data-theme="dark"] .stat-rotator { background: rgba(27,32,56,.38); border-c
 
 .section-title-row { display:flex; align-items:center; justify-content:space-between; gap: 12px; margin-bottom: 14px; }
 .board {
-  margin-top: 14px;
-  padding: 10px;
+  margin-top: 22px;
+  padding: 13px;
   background: var(--glass);
   border-radius: 20px;
   border: 1.5px solid rgba(196,120,58,.34);
@@ -331,8 +330,8 @@ html[data-theme="dark"] .board { border-color: var(--divider); box-shadow: var(-
   border-radius: 18px;
   background: rgba(255,255,255,.74);
   box-shadow: var(--shadow);
-  padding: 18px;
-  min-height: 142px;
+  padding: 22px;
+  min-height: 178px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -445,7 +444,7 @@ textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 6px;
+  bottom: 12px;
   width: min(420px, calc(100% - 24px));
   display: grid;
   grid-template-columns: repeat(4, 1fr);
