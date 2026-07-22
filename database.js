@@ -88,6 +88,15 @@
     return data;
   }
 
+  async function deletePost(id) {
+  const { error } = await requireClient()
+    .from('posts')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+}
+
   window.PrayerWallDB = {
     configured,
     listPosts,
@@ -99,5 +108,6 @@
     signOut,
     getSession,
     updatePost
+    deletePost
   };
 })();
