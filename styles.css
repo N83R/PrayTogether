@@ -321,7 +321,7 @@ button.primary, button.secondary, button.ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 6px;
   border-radius: 14px;
   padding: 15px 18px;
   font-size: 15.5px;
