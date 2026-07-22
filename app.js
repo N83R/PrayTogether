@@ -174,6 +174,8 @@ function render() {
   app.innerHTML = '';
   const templateId = route === 'home' ? 'home-template' : route === 'pray' ? 'pray-template' : route === 'submit-prayer' || route === 'submit-praise' ? 'submit-template' : route === 'praise' ? 'praise-template' : 'admin-template';
   app.append(document.getElementById(templateId).content.cloneNode(true));
+  
+  bindBrandAdmin();
 
   if (route === 'home') renderHome();
   if (route === 'pray') renderPray();
@@ -459,6 +461,27 @@ async function reportPost(id) {
 }
 function escapeHtml(str) { return String(str).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch])); }
 function bindNav() { document.querySelectorAll('[data-nav]').forEach(btn => btn.onclick = () => navigate(btn.dataset.nav)); }
+
+let lastBrandTap = 0;
+
+function bindBrandAdmin() {
+    const brand = document.getElementById("brandButton");
+
+    if (!brand) return;
+
+    brand.onclick = () => {
+        const now = Date.now();
+
+        if (now - lastBrandTap < 350) {
+            lastBrandTap = 0;
+            navigate("admin");
+            return;
+        }
+
+        lastBrandTap = now;
+        navigate("home");
+    };
+}
 
 document.addEventListener('click', e => {
   const themeBtn = e.target.closest('[data-theme-toggle]');
