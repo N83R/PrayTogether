@@ -9,13 +9,26 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="topbar">
-      <button class="brand" data-nav="home" aria-label="Go home">
-        <span class="brand-mark">🙏</span>
-        <span>Prayer Wall</span>
-      </button>
-      <div class="header-actions"><button class="theme-toggle" data-theme-toggle aria-label="Toggle night mode">☾</button><button class="ghost small" data-nav="admin">Admin</button></div>
-    </header>
+   <header class="topbar">
+  <button class="brand" id="brandButton" data-nav="home" aria-label="Go home">
+    <img
+      src="images/pray-together-logo.png"
+      alt=""
+      class="brand-logo"
+    />
+    <span>Pray Together</span>
+  </button>
+
+  <div class="header-actions">
+    <button
+      class="theme-toggle"
+      data-theme-toggle
+      aria-label="Toggle night mode"
+    >
+      ☾
+    </button>
+  </div>
+</header>
 
     <main id="app" aria-live="polite"></main>
 
