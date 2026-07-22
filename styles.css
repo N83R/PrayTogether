@@ -516,3 +516,20 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
     color: inherit;
     text-align: center;
 }
+
+.page-header-logo-button {
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.page-header-logo-button .page-header-logo {
+    margin: 0 auto 7px;
+}
+
+.page-header-logo-button:active {
+    transform: scale(0.97);
+}
