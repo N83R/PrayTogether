@@ -372,7 +372,7 @@ function drawAdminList() {
       <button class="secondary" data-admin-action="approve" data-id="${p.id}">Approve</button>
       <button class="ghost" data-admin-action="hide" data-id="${p.id}">Hide</button>
       <button class="ghost" data-admin-action="extend" data-id="${p.id}">Extend</button>
-      <button class="ghost" data-admin-action="delete" data-id="${p.id}">Delete</button>
+      <button class="danger" data-admin-action="delete" data-id="${p.id}">Delete</button>
     </div>
   </article>`).join('') || '<div class="card"><p>No posts match this view.</p></div>';
   list.querySelectorAll('[data-admin-action]').forEach(btn => btn.onclick = () => adminAction(btn.dataset.adminAction, btn.dataset.id));
