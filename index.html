@@ -37,6 +37,10 @@
 
     <main id="app" aria-live="polite"></main>
 
+    <footer class="site-footer">
+      <p>&copy; <span id="copyright-year"></span> Pray Together. All rights reserved.</p>
+    </footer>
+    
     <nav class="bottom-nav" aria-label="Primary navigation">
       <button data-nav="home">Wall</button>
       <button data-nav="pray">Pray</button>
@@ -220,5 +224,10 @@
   <script src="database.js"></script>
   <script src="moderation.js"></script>
   <script src="app.js"></script>
+  <script>
+  document.getElementById("copyright-year").textContent =
+    new Date().getFullYear();
+</script>
+  
 </body>
 </html>
