@@ -321,13 +321,13 @@ button.primary,
 button.secondary,
 button.ghost {
     display: grid;
-    grid-template-columns: 24px 1fr;
+    grid-template-columns: 24px auto;
     align-items: center;
-    column-gap: 10px;
-    text-align: left;
+    justify-content: center;
+    column-gap: 8px;
 
     border-radius: 14px;
-    padding: 15px 20px;
+    padding: 15px 18px;
     font-size: 15.5px;
     font-weight: 500;
     min-height: 54px;
