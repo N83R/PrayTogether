@@ -1,7 +1,7 @@
 const STORAGE_KEY = 'prayerWallPrototype.v1';
 const ADMIN_KEY = 'prayerWallAdminUnlocked';
-const ADMIN_PASSWORD = 'prayadmin';
 const THEME_KEY = 'prayerWallTheme';
+const REPORTER_KEY = 'prayerWallReporterToken';
 const DEFAULT_EXPIRATION_DAYS = { prayer: 90, praise: 120 };
 
 const samplePosts = [
@@ -14,13 +14,11 @@ const samplePosts = [
   { type: 'praise', body: 'My dad got a job after months of searching. God has been faithful to us.', prayed_count: 0 },
 ];
 
-const blockedTerms = [
-  'fuck','shit','bitch','asshole','nigger','fag','kike','retard','kill yourself','kys',
-  'porn','sex','rape','suicide pact','terrorist','nazi'
-];
-const suspiciousTerms = ['hate', 'idiot', 'stupid', 'die', 'drugs', 'weed', 'nude', 'onlyfans'];
+const moderation = window.PrayerWallModeration;
 
 let state = loadState();
+let remoteStats = null;
+const db = window.PrayerWallDB;
 let route = 'home';
 let activePrayer = null;
 let rotations = [];
@@ -51,6 +49,18 @@ function nowIso() { return new Date().toISOString(); }
 function uid(prefix = 'p') { return `${prefix}_${Math.random().toString(36).slice(2, 9)}${Date.now().toString(36).slice(-4)}`; }
 function daysFromNow(days) { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString(); }
 function getTagId() { return new URLSearchParams(location.search).get('t') || null; }
+function getReporterToken() {
+  try {
+    let token = localStorage.getItem(REPORTER_KEY);
+    if (!token) {
+      token = uid('visitor');
+      localStorage.setItem(REPORTER_KEY, token);
+    }
+    return token;
+  } catch (e) {
+    return uid('visitor');
+  }
+}
 function mockHash(value) { return value ? btoa(value).replace(/=/g, '').slice(0, 14) : null; }
 
 function loadState() {
@@ -79,9 +89,25 @@ function loadState() {
   });
   return { posts, prayer_actions, reports: [], disabledTags: [], created_at: nowIso() };
 }
-function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function saveState() { if (!db?.configured) localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+async function refreshRemoteState({ includeAll = false } = {}) {
+  if (!db?.configured) return;
+  const [posts, stats] = await Promise.all([
+    db.listPosts({ includeAll }),
+    db.getStats()
+  ]);
+  state.posts = posts;
+  remoteStats = stats;
+}
+
+function showError(error, fallback = 'Something went wrong. Please try again.') {
+  console.error(error);
+  alert(error?.message || fallback);
+}
 
 function expireOldPosts() {
+  if (db?.configured) return;
   const now = new Date();
   let changed = false;
   state.posts.forEach(post => {
@@ -94,12 +120,11 @@ function expireOldPosts() {
   if (changed) saveState();
 }
 
-function moderationCheck(body) {
-  const text = body.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
-  if (blockedTerms.some(term => text.includes(term))) return { status: 'rejected', reason: 'Blocked term or unsafe content detected.' };
-  if (suspiciousTerms.some(term => text.includes(term))) return { status: 'pending', reason: 'Needs review due to suspicious wording.' };
-  if (body.length < 12) return { status: 'pending', reason: 'Very short submission needs review.' };
-  return { status: 'active', reason: null };
+async function moderationCheck(body) {
+  if (!moderation) {
+    return { status: 'pending', severity: 0, matches: [], reason: 'Moderation dictionary was unavailable; manual review required.' };
+  }
+  return moderation.check(body);
 }
 
 function activePosts(type = null) {
@@ -147,7 +172,13 @@ function render() {
 
 function renderHome() {
   document.querySelector('[data-active-prayers]').textContent = activePosts('prayer').length;
-  const stats = [
+  const stats = remoteStats ? [
+    { n: Number(remoteStats.today || 0), label: 'Prayers Offered Today' },
+    { n: Number(remoteStats.week || 0), label: 'Prayers Offered This Week' },
+    { n: Number(remoteStats.month || 0), label: 'Prayers Offered This Month' },
+    { n: Number(remoteStats.year || 0), label: 'Prayers Offered This Year' },
+    { n: Number(remoteStats.lifetime || 0), label: 'Prayers Offered Lifetime' },
+  ] : [
     { n: countActionsSince(1), label: 'Prayers Offered Today' },
     { n: countActionsSince(7), label: 'Prayers Offered This Week' },
     { n: countActionsSince(30), label: 'Prayers Offered This Month' },
@@ -193,12 +224,22 @@ function renderPray() {
   }
   pickPrayer();
   document.querySelector('[data-action="skip"]').onclick = () => pickPrayer(activePrayer?.id);
-  document.querySelector('[data-action="prayed"]').onclick = () => {
+  document.querySelector('[data-action="prayed"]').onclick = async () => {
     if (!activePrayer) return;
-    activePrayer.prayed_count += 1;
-    activePrayer.updated_at = nowIso();
-    state.prayer_actions.push({ id: uid('act'), post_id: activePrayer.id, tag_id: getTagId(), ip_hash: mockHash('prototype-ip'), device_hash: mockHash(navigator.userAgent), created_at: nowIso() });
-    saveState();
+    try {
+      if (db?.configured) {
+        activePrayer.prayed_count = Number(await db.recordPrayer(activePrayer.id, getTagId()));
+        remoteStats = await db.getStats();
+      } else {
+        activePrayer.prayed_count += 1;
+        activePrayer.updated_at = nowIso();
+        state.prayer_actions.push({ id: uid('act'), post_id: activePrayer.id, tag_id: getTagId(), ip_hash: mockHash('prototype-ip'), device_hash: mockHash(navigator.userAgent), created_at: nowIso() });
+        saveState();
+      }
+    } catch (error) {
+      showError(error, 'The prayer could not be recorded.');
+      return;
+    }
     document.querySelector('.prayer-focus').innerHTML = `<div class="thanks"><div class="big">🙏</div><h1>Thank you.</h1><p class="lede">Your prayer matters. God knows this person’s name.</p><button class="primary full" data-action="again">Pray for Someone Else</button></div>`;
     document.querySelector('[data-action="again"]').onclick = () => render();
   };
@@ -209,21 +250,35 @@ function renderSubmit(type) {
   document.querySelector('[data-form-eyebrow]').textContent = type === 'prayer' ? 'Ask for prayer' : 'Share encouragement';
   document.querySelector('[data-form-title]').textContent = type === 'prayer' ? 'Submit a Prayer' : 'Submit a Praise';
   document.querySelector('[data-textarea-label]').textContent = type === 'prayer' ? 'Prayer request' : 'Praise report';
-  document.querySelector('[data-submit-form]').onsubmit = (e) => {
+  document.querySelector('[data-submit-form]').onsubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const body = String(form.get('body') || '').trim();
     const displayName = String(form.get('displayName') || '').trim() || null;
-    const mod = moderationCheck(body);
-    const post = {
+    const mod = await moderationCheck(body);
+    let post = {
       id: uid('post'), type, body, display_name: displayName, status: mod.status,
       prayed_count: 0, report_count: 0, tag_id: getTagId(), ip_hash: mockHash('prototype-ip'),
       device_hash: mockHash(navigator.userAgent), moderation_reason: mod.reason,
+      moderation_source: mod.flagged ? 'automatic_dictionary' : null, moderation_severity: mod.severity || 0, moderation_matches: mod.matches || [],
       created_at: nowIso(), expires_at: daysFromNow(DEFAULT_EXPIRATION_DAYS[type]), updated_at: nowIso()
     };
-    state.posts.unshift(post); saveState();
-    const cls = mod.status === 'active' ? 'good' : mod.status === 'pending' ? '' : 'bad';
-    e.currentTarget.closest('.card').innerHTML = `<div class="notice ${cls}">${mod.status === 'active' ? 'Submitted. It is now on the board.' : mod.status === 'pending' ? 'Submitted for review before it appears publicly.' : 'This submission was rejected by the content filter.'}</div><button class="primary full" data-nav="home">Return Home</button>`;
+    try {
+      if (db?.configured) {
+        const created = await db.createPost(post);
+        post = created;
+        state.posts.unshift(created);
+      } else {
+        state.posts.unshift(post);
+        saveState();
+      }
+    } catch (error) {
+      showError(error, 'The submission could not be saved.');
+      return;
+    }
+    const finalStatus = post.status;
+    const cls = finalStatus === 'active' ? 'good' : '';
+    e.currentTarget.closest('.card').innerHTML = `<div class="notice ${cls}">${finalStatus === 'active' ? 'Submitted. It is now on the board.' : 'Submitted for administrator review before it appears publicly.'}</div><button class="primary full" data-nav="home">Return Home</button>`;
     bindNav();
   };
 }
@@ -244,20 +299,44 @@ function renderPraise() {
 }
 
 function renderAdmin() {
-  const unlocked = sessionStorage.getItem(ADMIN_KEY) === 'true';
-  document.querySelector('[data-admin-login]').classList.toggle('hidden', unlocked);
-  document.querySelector('[data-admin-panel]').classList.toggle('hidden', !unlocked);
-  document.querySelector('[data-login-form]')?.addEventListener('submit', e => {
+  db?.getSession().then(session => {
+    const unlocked = db?.configured ? Boolean(session) : sessionStorage.getItem(ADMIN_KEY) === 'true';
+    document.querySelector('[data-admin-login]')?.classList.toggle('hidden', unlocked);
+    document.querySelector('[data-admin-panel]')?.classList.toggle('hidden', !unlocked);
+    if (unlocked && db?.configured) {
+      refreshRemoteState({ includeAll: true }).then(drawAdminList).catch(showError);
+    } else if (unlocked) {
+      drawAdminList();
+    }
+  }).catch(showError);
+
+  document.querySelector('[data-login-form]')?.addEventListener('submit', async e => {
     e.preventDefault();
-    if (new FormData(e.currentTarget).get('password') === ADMIN_PASSWORD) { sessionStorage.setItem(ADMIN_KEY, 'true'); render(); }
-    else e.currentTarget.insertAdjacentHTML('beforebegin', '<div class="notice bad">Incorrect password.</div>');
+    const form = new FormData(e.currentTarget);
+    try {
+      if (db?.configured) {
+        await db.signIn(String(form.get('email') || ''), String(form.get('password') || ''));
+        await refreshRemoteState({ includeAll: true });
+      } else {
+        sessionStorage.setItem(ADMIN_KEY, 'true');
+      }
+      render();
+    } catch (error) {
+      e.currentTarget.insertAdjacentHTML('beforebegin', `<div class="notice bad">${escapeHtml(error.message || 'Unable to sign in.')}</div>`);
+    }
   });
-  if (!unlocked) return;
-  document.querySelector('[data-action="logout"]').onclick = () => { sessionStorage.removeItem(ADMIN_KEY); render(); };
+
+  document.querySelector('[data-action="logout"]')?.addEventListener('click', async () => {
+    if (db?.configured) await db.signOut();
+    sessionStorage.removeItem(ADMIN_KEY);
+    await refreshRemoteState();
+    render();
+  });
+
   const filter = document.querySelector('[data-admin-filter]');
   const search = document.querySelector('[data-admin-search]');
-  filter.oninput = drawAdminList; search.oninput = drawAdminList;
-  drawAdminList();
+  if (filter) filter.oninput = drawAdminList;
+  if (search) search.oninput = drawAdminList;
 }
 
 function drawAdminList() {
@@ -274,7 +353,7 @@ function drawAdminList() {
     <span class="pill ${p.type === 'praise' ? 'praise' : ''}">${p.type} / ${p.status}</span>
     <p>${escapeHtml(p.body)}</p>
     <div class="admin-meta">
-      <span>reports: ${p.report_count}</span><span>prayed: ${p.prayed_count}</span><span>tag: ${p.tag_id || 'none'}</span><span>expires: ${new Date(p.expires_at).toLocaleDateString()}</span>${p.moderation_reason ? `<span>reason: ${escapeHtml(p.moderation_reason)}</span>` : ''}
+      <span>reports: ${p.report_count}</span><span>prayed: ${p.prayed_count}</span><span>tag: ${p.tag_id || 'none'}</span><span>expires: ${new Date(p.expires_at).toLocaleDateString()}</span>${p.moderation_source ? `<span>flag source: ${escapeHtml(p.moderation_source)}</span>` : ''}${p.moderation_severity ? `<span>severity: ${p.moderation_severity}/5</span>` : ''}${p.moderation_reason ? `<span>reason: ${escapeHtml(p.moderation_reason)}</span>` : ''}${Array.isArray(p.moderation_matches) && p.moderation_matches.length ? `<span>matches: ${p.moderation_matches.map(m => `${escapeHtml(m.word)} (${escapeHtml((m.categories || []).join(', '))}, ${m.intensity}/5)`).join('; ')}</span>` : ''}
     </div>
     <div class="admin-actions">
       <button class="secondary" data-admin-action="approve" data-id="${p.id}">Approve</button>
@@ -286,23 +365,40 @@ function drawAdminList() {
   list.querySelectorAll('[data-admin-action]').forEach(btn => btn.onclick = () => adminAction(btn.dataset.adminAction, btn.dataset.id));
 }
 
-function adminAction(action, id) {
+async function adminAction(action, id) {
   const post = state.posts.find(p => p.id === id); if (!post) return;
-  if (action === 'approve') post.status = 'active';
-  if (action === 'hide') post.status = 'hidden';
-  if (action === 'delete') post.status = 'deleted';
-  if (action === 'extend') post.expires_at = daysFromNow(DEFAULT_EXPIRATION_DAYS[post.type]);
-  post.updated_at = nowIso(); saveState(); drawAdminList();
+  const changes = { updated_at: nowIso() };
+  if (action === 'approve') changes.status = 'active';
+  if (action === 'hide') changes.status = 'hidden';
+  if (action === 'delete') changes.status = 'deleted';
+  if (action === 'extend') changes.expires_at = daysFromNow(DEFAULT_EXPIRATION_DAYS[post.type]);
+  try {
+    if (db?.configured) {
+      const updated = await db.updatePost(id, changes);
+      Object.assign(post, updated);
+    } else {
+      Object.assign(post, changes);
+      saveState();
+    }
+    drawAdminList();
+  } catch (error) { showError(error); }
 }
 
-function reportPost(id) {
+async function reportPost(id) {
   const post = state.posts.find(p => p.id === id); if (!post) return;
-  post.report_count += 1;
-  state.reports.push({ id: uid('rep'), post_id: id, reason: null, tag_id: getTagId(), ip_hash: mockHash('prototype-ip'), created_at: nowIso() });
-  if (post.report_count >= 3) { post.status = 'hidden'; post.moderation_reason = 'Auto-hidden after multiple reports.'; }
-  saveState();
-  alert('Thank you. This has been sent for review.');
-  render();
+  try {
+    if (db?.configured) {
+      post.report_count = Number(await db.reportPost(id, getTagId(), getReporterToken()));
+      if (post.report_count >= 3) post.status = 'pending';
+    } else {
+      post.report_count += 1;
+      state.reports.push({ id: uid('rep'), post_id: id, reason: null, tag_id: getTagId(), ip_hash: mockHash('prototype-ip'), created_at: nowIso() });
+      if (post.report_count >= 3) { post.status = 'pending'; post.moderation_source = 'user_reports'; post.moderation_severity = null; post.moderation_reason = 'Pulled from the public wall after 3 user reports.'; }
+      saveState();
+    }
+    alert('Thank you. This has been sent for review.');
+    render();
+  } catch (error) { showError(error, 'The report could not be submitted.'); }
 }
 function escapeHtml(str) { return String(str).replace(/[&<>'"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch])); }
 function bindNav() { document.querySelectorAll('[data-nav]').forEach(btn => btn.onclick = () => navigate(btn.dataset.nav)); }
@@ -315,4 +411,8 @@ document.addEventListener('click', e => {
 });
 
 bindNav();
-render();
+(async () => {
+  try { await refreshRemoteState(); }
+  catch (error) { showError(error, 'Could not connect to the shared prayer database.'); }
+  render();
+})();

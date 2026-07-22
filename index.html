@@ -86,7 +86,7 @@
           <span data-textarea-label>Prayer request</span>
           <textarea name="body" maxlength="500" rows="7" required placeholder="Write your request here. Please avoid names/details that should stay private."></textarea>
         </label>
-        <p class="form-note">Submissions are filtered before posting. Hateful, profane, sexual, or abusive content is rejected or held for review.</p>
+        <p class="form-note">Clean submissions post automatically. Content matched by the moderation reference list is held for administrator review.</p>
         <button class="primary full" type="submit">Submit</button>
       </form>
     </section>
@@ -109,9 +109,10 @@
     <section class="card admin-login" data-admin-login>
       <p class="eyebrow">Private</p>
       <h1>Admin</h1>
-      <p class="lede">Prototype password: <strong>prayadmin</strong></p>
+      <p class="lede">Sign in with the administrator account configured in Supabase.</p>
       <form data-login-form>
-        <label>Password<input name="password" type="password" autocomplete="current-password" /></label>
+        <label>Email<input name="email" type="email" autocomplete="username" required /></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
         <button class="primary full" type="submit">Enter Admin</button>
       </form>
     </section>
@@ -139,6 +140,10 @@
     </section>
   </template>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="database.js"></script>
+  <script src="moderation.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

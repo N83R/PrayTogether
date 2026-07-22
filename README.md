@@ -1,18 +1,26 @@
-# Prayer Wall NFC Prototype
+# Prayer Wall
 
-A mobile-first static prototype for an NFC-linked church/youth ministry prayer wall.
+A mobile-first, NFC-linked church/youth ministry prayer wall with an optional Supabase backend.
 
-## How to run
+## Current modes
 
-Open `index.html` in a browser. No build step is required.
+- **Demo mode:** Leave `config.js` blank. Data stays in browser `localStorage`.
+- **Shared mode:** Configure Supabase. Prayer requests, praises, prayer counts, reports, and admin changes become cumulative across devices.
 
-For the best local testing experience, you can serve the folder with:
+## Supabase setup
+
+1. Create a Supabase project.
+2. Open **SQL Editor** and run all of `supabase-schema.sql`.
+3. In **Authentication > Users**, create the administrator account that will access the admin dashboard.
+4. Open **Project Settings > API** and copy the project URL and publishable/anon key.
+5. Paste those values into `config.js`.
+6. Serve the project over HTTP rather than opening `index.html` directly.
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open:
+Then visit:
 
 ```text
 http://localhost:8000/?t=DEMO01
@@ -20,39 +28,32 @@ http://localhost:8000/?t=DEMO01
 
 The `?t=DEMO01` query string simulates a unique NFC tag ID.
 
-## Admin
+## Database behavior
 
-Click `Admin` in the top right.
+- Public visitors can read active, unexpired posts.
+- Public visitors can submit prayers and praises.
+- Prayer counts are incremented atomically in PostgreSQL.
+- Reports are stored centrally; a post is automatically hidden after three reports.
+- Prayer activity statistics are calculated from the shared action log.
+- Only authenticated Supabase users can view and modify the full admin dataset.
+- Row Level Security is enabled on exposed tables.
 
-Prototype password:
+## Important production follow-ups
 
-```text
-prayadmin
-```
+The current text filter still runs in the browser. Before a broad public launch, move moderation and rate limiting to a Supabase Edge Function or another trusted server environment. Also consider CAPTCHA/Turnstile and server-generated privacy-preserving request fingerprints to reduce spam and repeated clicks.
 
-The admin dashboard can approve, hide, delete, extend, search, and filter posts.
 
-## Prototype behavior
+## Moderation upgrade
 
-- Uses browser `localStorage` as a mock database.
-- Prayers and praises have expiration dates.
-- Prayer actions are counted as “Prayers Offered.”
-- The “Pray for Someone” page shows one random prayer and does not show counts before praying.
-- Submissions go through a simple content filter.
-- Reported posts auto-hide after 3 reports.
-- Tag IDs are stored when a URL includes `?t=TAGID`.
+After the base schema has been installed, run `supabase-moderation-migration.sql` in the Supabase SQL Editor.
 
-## Next production steps
+This upgrade:
 
-Replace localStorage with a real database such as Supabase, Firebase, SQLite, or Postgres.
+- Imports the unchanged `better-profane-words` 1.0.3 reference set.
+- Automatically publishes clean submissions.
+- Holds matched submissions as `pending` for administrator review.
+- Records the matched terms, categories, maximum intensity, and moderation source.
+- Pulls an active post from the public wall after three user reports and sends it to `pending` review.
+- Forces public submissions through the `submit_post` database function so browser-side moderation cannot be bypassed.
 
-Add:
-
-- Real auth for admin dashboard.
-- Server-side moderation.
-- Server-side rate limiting.
-- Hashed IP/device fingerprints on the backend.
-- Scheduled cleanup/expiration jobs.
-- Better profanity/hate/spam filtering.
-- HTTPS hosting and domain setup.
-- Optional PWA install support.
+The original third-party reference files and license are preserved under `vendor/better-profane-words/`.
