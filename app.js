@@ -262,166 +262,177 @@ function renderHome() {
    * Includes both active prayers and active praises.
    * Automatically rotates and responds to left/right swipes.
    */
-  const cards = activePosts().sort((a, b) => {
-    const bActivity =
-      Number(b.prayed_count || 0) + Number(b.report_count || 0);
+const cards = activePosts().sort((a, b) => {
+  const bActivity =
+    Number(b.prayed_count || 0) + Number(b.report_count || 0);
 
-    const aActivity =
-      Number(a.prayed_count || 0) + Number(a.report_count || 0);
+  const aActivity =
+    Number(a.prayed_count || 0) + Number(a.report_count || 0);
 
-    return bActivity - aActivity;
-  });
+  return bActivity - aActivity;
+});
 
-  const board = document.querySelector('[data-board-card]');
-  const boardType = document.querySelector('[data-board-type]');
-  const boardBody = document.querySelector('[data-board-body]');
+const board = document.querySelector('[data-board-card]');
+const boardType = document.querySelector('[data-board-type]');
+const boardBody = document.querySelector('[data-board-body]');
 
-  let boardIndex = 0;
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let boardAnimationTimer = null;
+let boardIndex = 0;
+let touchStartX = 0;
+let touchStartY = 0;
+let transitionTimer = null;
 
-  function normalizeBoardIndex(index) {
-    if (!cards.length) return 0;
+function normalizeBoardIndex(index) {
+  if (!cards.length) return 0;
 
-    if (index < 0) {
-      return cards.length - 1;
-    }
+  if (index < 0) return cards.length - 1;
+  if (index >= cards.length) return 0;
 
-    if (index >= cards.length) {
-      return 0;
-    }
+  return index;
+}
 
-    return index;
+function updateBoardContent(index) {
+  if (!cards.length) {
+    boardType.textContent = 'Prayer';
+    boardType.classList.remove('praise');
+    boardBody.textContent =
+      'No active posts yet. Be the first to submit a prayer.';
+    return;
   }
 
-  function displayBoardCard(index, direction = 'next') {
-    window.clearTimeout(boardAnimationTimer);
+  boardIndex = normalizeBoardIndex(index);
+  const post = cards[boardIndex];
 
-    if (!cards.length) {
-      boardType.textContent = 'Prayer';
-      boardType.classList.remove('praise');
-      boardBody.textContent =
-        'No active posts yet. Be the first to submit a prayer.';
-      return;
-    }
+  boardType.textContent =
+    post.type === 'prayer' ? 'Prayer' : 'Praise';
 
-    boardIndex = normalizeBoardIndex(index);
+  boardType.classList.toggle(
+    'praise',
+    post.type === 'praise'
+  );
 
-    const post = cards[boardIndex];
+  boardBody.textContent = post.body;
+}
+
+function showBoardWithFade(index) {
+  clearTimeout(transitionTimer);
+
+  board.classList.remove(
+    'board-swipe-left',
+    'board-swipe-right',
+    'board-swipe-in-left',
+    'board-swipe-in-right'
+  );
+
+  board.classList.add('fading');
+
+  transitionTimer = setTimeout(() => {
+    updateBoardContent(index);
+    board.classList.remove('fading');
+  }, 280);
+}
+
+function showBoardWithSwipe(index, direction) {
+  clearTimeout(transitionTimer);
+
+  board.classList.remove(
+    'fading',
+    'board-swipe-left',
+    'board-swipe-right',
+    'board-swipe-in-left',
+    'board-swipe-in-right'
+  );
+
+  board.classList.add(
+    direction === 'left'
+      ? 'board-swipe-left'
+      : 'board-swipe-right'
+  );
+
+  transitionTimer = setTimeout(() => {
+    updateBoardContent(index);
 
     board.classList.remove(
-      'board-slide-left',
-      'board-slide-right'
+      'board-swipe-left',
+      'board-swipe-right'
     );
 
     board.classList.add(
-      direction === 'previous'
-        ? 'board-slide-right'
-        : 'board-slide-left'
+      direction === 'left'
+        ? 'board-swipe-in-right'
+        : 'board-swipe-in-left'
     );
 
-    boardAnimationTimer = window.setTimeout(() => {
-      boardType.textContent =
-        post.type === 'prayer' ? 'Prayer' : 'Praise';
-
-      boardType.classList.toggle(
-        'praise',
-        post.type === 'praise'
-      );
-
-      boardBody.textContent = post.body;
-
+    setTimeout(() => {
       board.classList.remove(
-        'board-slide-left',
-        'board-slide-right'
+        'board-swipe-in-left',
+        'board-swipe-in-right'
       );
+    }, 280);
+  }, 220);
+}
 
-      board.classList.add('board-slide-in');
+function nextBoardAutomatically() {
+  showBoardWithFade(boardIndex + 1);
+}
 
-      window.setTimeout(() => {
-        board.classList.remove('board-slide-in');
-      }, 300);
-    }, 180);
-  }
-
-  function restartBoardRotation() {
-    startRotation('board', nextBoardCard, 6800);
-  }
-
-  function nextBoardCard() {
-    displayBoardCard(boardIndex + 1, 'next');
-  }
-
-  function previousBoardCard() {
-    displayBoardCard(boardIndex - 1, 'previous');
-  }
-
-  /*
-   * Show the first post immediately.
-   */
-  displayBoardCard(0);
-  restartBoardRotation();
-
-  /*
-   * Record where the swipe begins.
-   */
-  board.addEventListener(
-    'touchstart',
-    event => {
-      const touch = event.touches[0];
-
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-    },
-    { passive: true }
-  );
-
-  /*
-   * Decide whether the gesture was a horizontal swipe.
-   */
-  board.addEventListener(
-    'touchend',
-    event => {
-      const touch = event.changedTouches[0];
-
-      const horizontalDistance =
-        touch.clientX - touchStartX;
-
-      const verticalDistance =
-        touch.clientY - touchStartY;
-
-      /*
-       * Ignore short gestures and normal vertical scrolling.
-       */
-      if (
-        Math.abs(horizontalDistance) < 50 ||
-        Math.abs(horizontalDistance) <=
-          Math.abs(verticalDistance)
-      ) {
-        return;
-      }
-
-      /*
-       * Swiping left advances to the next post.
-       * Swiping right returns to the previous post.
-       */
-      if (horizontalDistance < 0) {
-        nextBoardCard();
-      } else {
-        previousBoardCard();
-      }
-
-      /*
-       * Restart the timer so the next automatic change
-       * happens 6.8 seconds after the manual swipe.
-       */
-      restartBoardRotation();
-    },
-    { passive: true }
+function restartBoardRotation() {
+  startRotation(
+    'board',
+    nextBoardAutomatically,
+    6800
   );
 }
 
+updateBoardContent(0);
+restartBoardRotation();
+
+board.addEventListener(
+  'touchstart',
+  event => {
+    const touch = event.touches[0];
+
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  },
+  { passive: true }
+);
+
+board.addEventListener(
+  'touchend',
+  event => {
+    const touch = event.changedTouches[0];
+
+    const horizontalDistance =
+      touch.clientX - touchStartX;
+
+    const verticalDistance =
+      touch.clientY - touchStartY;
+
+    if (
+      Math.abs(horizontalDistance) < 50 ||
+      Math.abs(horizontalDistance) <=
+        Math.abs(verticalDistance)
+    ) {
+      return;
+    }
+
+    if (horizontalDistance < 0) {
+      showBoardWithSwipe(
+        boardIndex + 1,
+        'left'
+      );
+    } else {
+      showBoardWithSwipe(
+        boardIndex - 1,
+        'right'
+      );
+    }
+
+    restartBoardRotation();
+  },
+  { passive: true }
+);
+  
 function renderPray() {
   const container = document.querySelector('[data-random-prayer]');
   function pickPrayer(excludeId = null) {
