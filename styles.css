@@ -299,7 +299,12 @@ html[data-theme="dark"] .stat-rotator { background: rgba(27,32,56,.38); border-c
   text-transform: uppercase;
   transition: opacity .35s, transform .35s;
 }
-.fading { opacity: 0; transform: translateY(6px); }
+
+.stat-number.fading,
+.stat-label.fading {
+  opacity: 0;
+  transform: translateY(6px);
+}
 
 .section-title-row { display:flex; align-items:center; justify-content:space-between; gap: 12px; margin-bottom: 14px; }
 .board {
@@ -519,16 +524,17 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
 
 /* Home board: gentle fade with mobile swipe detection */
 
+/* Home board: gentle fade with mobile swipe detection */
+
 [data-board-card] {
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
+  transform: none;
+  transition: opacity 600ms ease-in-out;
 }
 
 [data-board-card].fading {
   opacity: 0;
-}
-
-[data-board-card] {
-  transition: opacity 600ms ease-in-out;
+  transform: none;
 }
