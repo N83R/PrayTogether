@@ -190,48 +190,18 @@ function renderHome() {
 
   const stats = remoteStats
     ? [
-        {
-          n: Number(remoteStats.today || 0),
-          label: 'Prayers Offered Today'
-        },
-        {
-          n: Number(remoteStats.week || 0),
-          label: 'Prayers Offered This Week'
-        },
-        {
-          n: Number(remoteStats.month || 0),
-          label: 'Prayers Offered This Month'
-        },
-        {
-          n: Number(remoteStats.year || 0),
-          label: 'Prayers Offered This Year'
-        },
-        {
-          n: Number(remoteStats.lifetime || 0),
-          label: 'Prayers Offered Lifetime'
-        }
+        { n: Number(remoteStats.today || 0), label: 'Prayers Offered Today' },
+        { n: Number(remoteStats.week || 0), label: 'Prayers Offered This Week' },
+        { n: Number(remoteStats.month || 0), label: 'Prayers Offered This Month' },
+        { n: Number(remoteStats.year || 0), label: 'Prayers Offered This Year' },
+        { n: Number(remoteStats.lifetime || 0), label: 'Prayers Offered Lifetime' },
       ]
     : [
-        {
-          n: countActionsSince(1),
-          label: 'Prayers Offered Today'
-        },
-        {
-          n: countActionsSince(7),
-          label: 'Prayers Offered This Week'
-        },
-        {
-          n: countActionsSince(30),
-          label: 'Prayers Offered This Month'
-        },
-        {
-          n: countActionsSince(365),
-          label: 'Prayers Offered This Year'
-        },
-        {
-          n: state.prayer_actions.length,
-          label: 'Prayers Offered Lifetime'
-        }
+        { n: countActionsSince(1), label: 'Prayers Offered Today' },
+        { n: countActionsSince(7), label: 'Prayers Offered This Week' },
+        { n: countActionsSince(30), label: 'Prayers Offered This Month' },
+        { n: countActionsSince(365), label: 'Prayers Offered This Year' },
+        { n: state.prayer_actions.length, label: 'Prayers Offered Lifetime' },
       ];
 
   let statIndex = 0;
@@ -251,187 +221,157 @@ function renderHome() {
       label.classList.remove('fading');
 
       statIndex = (statIndex + 1) % stats.length;
-    }, 260);
+    }, 500);
   }
 
   showStat();
   startRotation('stats', showStat, 4200);
 
   /*
-   * HOME BOARD
-   * Includes both active prayers and active praises.
-   * Automatically rotates and responds to left/right swipes.
+   * HOME PRAYER / PRAISE BOARD
    */
-const cards = activePosts().sort((a, b) => {
-  const bActivity =
-    Number(b.prayed_count || 0) + Number(b.report_count || 0);
 
-  const aActivity =
-    Number(a.prayed_count || 0) + Number(a.report_count || 0);
+  const cards = activePosts().sort((a, b) => {
+    const bActivity =
+      Number(b.prayed_count || 0) +
+      Number(b.report_count || 0);
 
-  return bActivity - aActivity;
-});
+    const aActivity =
+      Number(a.prayed_count || 0) +
+      Number(a.report_count || 0);
 
-const board = document.querySelector('[data-board-card]');
-const boardType = document.querySelector('[data-board-type]');
-const boardBody = document.querySelector('[data-board-body]');
+    return bActivity - aActivity;
+  });
 
-let boardIndex = 0;
-let touchStartX = 0;
-let touchStartY = 0;
-let transitionTimer = null;
+  const board = document.querySelector('[data-board-card]');
+  const boardType = document.querySelector('[data-board-type]');
+  const boardBody = document.querySelector('[data-board-body]');
 
-function normalizeBoardIndex(index) {
-  if (!cards.length) return 0;
+  let boardIndex = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let boardFadeTimeout = null;
 
-  if (index < 0) return cards.length - 1;
-  if (index >= cards.length) return 0;
+  function normalizeBoardIndex(index) {
+    if (!cards.length) return 0;
 
-  return index;
-}
+    if (index < 0) {
+      return cards.length - 1;
+    }
 
-function updateBoardContent(index) {
-  if (!cards.length) {
-    boardType.textContent = 'Prayer';
-    boardType.classList.remove('praise');
-    boardBody.textContent =
-      'No active posts yet. Be the first to submit a prayer.';
-    return;
+    if (index >= cards.length) {
+      return 0;
+    }
+
+    return index;
   }
 
-  boardIndex = normalizeBoardIndex(index);
-  const post = cards[boardIndex];
-
-  boardType.textContent =
-    post.type === 'prayer' ? 'Prayer' : 'Praise';
-
-  boardType.classList.toggle(
-    'praise',
-    post.type === 'praise'
-  );
-
-  boardBody.textContent = post.body;
-}
-
-function showBoardWithFade(index) {
-  clearTimeout(transitionTimer);
-
-  board.classList.remove(
-    'board-swipe-left',
-    'board-swipe-right',
-    'board-swipe-in-left',
-    'board-swipe-in-right'
-  );
-
-  board.classList.add('fading');
-
-  transitionTimer = setTimeout(() => {
-    updateBoardContent(index);
-    board.classList.remove('fading');
-  }, 280);
-}
-
-function showBoardWithSwipe(index, direction) {
-  clearTimeout(transitionTimer);
-
-  board.classList.remove(
-    'fading',
-    'board-swipe-left',
-    'board-swipe-right',
-    'board-swipe-in-left',
-    'board-swipe-in-right'
-  );
-
-  board.classList.add(
-    direction === 'left'
-      ? 'board-swipe-left'
-      : 'board-swipe-right'
-  );
-
-  transitionTimer = setTimeout(() => {
-    updateBoardContent(index);
-
-    board.classList.remove(
-      'board-swipe-left',
-      'board-swipe-right'
-    );
-
-    board.classList.add(
-      direction === 'left'
-        ? 'board-swipe-in-right'
-        : 'board-swipe-in-left'
-    );
-
-    setTimeout(() => {
-      board.classList.remove(
-        'board-swipe-in-left',
-        'board-swipe-in-right'
-      );
-    }, 280);
-  }, 220);
-}
-
-function nextBoardAutomatically() {
-  showBoardWithFade(boardIndex + 1);
-}
-
-function restartBoardRotation() {
-  startRotation(
-    'board',
-    nextBoardAutomatically,
-    6800
-  );
-}
-
-updateBoardContent(0);
-restartBoardRotation();
-
-board.addEventListener(
-  'touchstart',
-  event => {
-    const touch = event.touches[0];
-
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
-  },
-  { passive: true }
-);
-
-board.addEventListener(
-  'touchend',
-  event => {
-    const touch = event.changedTouches[0];
-
-    const horizontalDistance =
-      touch.clientX - touchStartX;
-
-    const verticalDistance =
-      touch.clientY - touchStartY;
-
-    if (
-      Math.abs(horizontalDistance) < 50 ||
-      Math.abs(horizontalDistance) <=
-        Math.abs(verticalDistance)
-    ) {
+  function updateBoardContent(index) {
+    if (!cards.length) {
+      boardType.textContent = 'Prayer';
+      boardType.classList.remove('praise');
+      boardBody.textContent =
+        'No active posts yet. Be the first to submit a prayer.';
       return;
     }
 
-    if (horizontalDistance < 0) {
-      showBoardWithSwipe(
-        boardIndex + 1,
-        'left'
-      );
-    } else {
-      showBoardWithSwipe(
-        boardIndex - 1,
-        'right'
-      );
-    }
+    boardIndex = normalizeBoardIndex(index);
 
-    restartBoardRotation();
-  },
-  { passive: true }
-);
+    const post = cards[boardIndex];
+
+    boardType.textContent =
+      post.type === 'prayer' ? 'Prayer' : 'Praise';
+
+    boardType.classList.toggle(
+      'praise',
+      post.type === 'praise'
+    );
+
+    boardBody.textContent = post.body;
+  }
+
+  /*
+   * Every board change uses only the gentle fade.
+   */
+  function fadeToBoardCard(index) {
+    clearTimeout(boardFadeTimeout);
+
+    board.classList.add('fading');
+
+    boardFadeTimeout = setTimeout(() => {
+      updateBoardContent(index);
+      board.classList.remove('fading');
+    }, 600);
+  }
+
+  function nextBoardCard() {
+    fadeToBoardCard(boardIndex + 1);
+  }
+
+  function previousBoardCard() {
+    fadeToBoardCard(boardIndex - 1);
+  }
+
+  function restartBoardRotation() {
+    startRotation('board', nextBoardCard, 6800);
+  }
+
+  /*
+   * Display the first post without fading on page load.
+   */
+  updateBoardContent(0);
+  restartBoardRotation();
+
+  /*
+   * Detect mobile swipe.
+   * The card does not physically move.
+   */
+  board.addEventListener(
+    'touchstart',
+    event => {
+      const touch = event.touches[0];
+
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    },
+    { passive: true }
+  );
+
+  board.addEventListener(
+    'touchend',
+    event => {
+      const touch = event.changedTouches[0];
+
+      const distanceX =
+        touch.clientX - touchStartX;
+
+      const distanceY =
+        touch.clientY - touchStartY;
+
+      /*
+       * Ignore short gestures and vertical scrolling.
+       */
+      if (
+        Math.abs(distanceX) < 50 ||
+        Math.abs(distanceX) <= Math.abs(distanceY)
+      ) {
+        return;
+      }
+
+      if (distanceX < 0) {
+        nextBoardCard();
+      } else {
+        previousBoardCard();
+      }
+
+      /*
+       * Start a fresh 6.8-second timer after a swipe.
+       */
+      restartBoardRotation();
+    },
+    { passive: true }
+  );
+}
   
 function renderPray() {
   const container = document.querySelector('[data-random-prayer]');
