@@ -517,8 +517,7 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
     text-align: center;
 }
 
-/* Home prayer and praise board swipe behavior */
-/* Allow vertical scrolling while detecting horizontal board swipes */
+/* Home board: gentle fade with mobile swipe detection */
 
 [data-board-card] {
   touch-action: pan-y;
@@ -526,52 +525,10 @@ html[data-theme="dark"] .bottom-nav button.active { color: var(--gold); }
   -webkit-user-select: none;
 }
 
-/* Manual swipe only */
-
-[data-board-card].board-swipe-left {
+[data-board-card].fading {
   opacity: 0;
-  transform: translateX(-28px);
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease;
 }
 
-[data-board-card].board-swipe-right {
-  opacity: 0;
-  transform: translateX(28px);
-  transition:
-    opacity 220ms ease,
-    transform 220ms ease;
-}
-
-[data-board-card].board-swipe-in-left {
-  animation: board-swipe-in-left 280ms ease;
-}
-
-[data-board-card].board-swipe-in-right {
-  animation: board-swipe-in-right 280ms ease;
-}
-
-@keyframes board-swipe-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-28px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes board-swipe-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(28px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+[data-board-card] {
+  transition: opacity 600ms ease-in-out;
 }
